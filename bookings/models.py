@@ -1,5 +1,10 @@
 from django.db import models
 
+from core.models import CreateUpdateInfo
+from inventory.models import Inventory
+from member.models import Member
+
+
 # Create your models here.
 
 class BookingStatus(models.TextChoices):
@@ -15,3 +20,6 @@ class Booking(CreateUpdateInfo):
         choices=BookingStatus.choices, 
         default=BookingStatus.CREATED
     )
+
+    class Meta:
+        abstract = False

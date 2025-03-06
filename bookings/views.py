@@ -1,4 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from bookings.models import Booking, BookingStatus
+from bookings.serializers import BookingSerializer
+from inventory.models import Inventory
+
 
 # Create your views here.
 
@@ -11,8 +19,8 @@ class CancelBookingView(APIView):
 		except:
 			return Response({"message": "Booking Not Found!"}, status=status.HTTP_400_BAD_REQUEST)	
 		serializer = BookingSerializer(booking, data={"status": BookingStatus.CANCELLED}, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
 
 		return Response({"message": "Booking cancelled successfully"}, status=status.HTTP_200_OK)
 
