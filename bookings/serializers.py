@@ -5,7 +5,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
 	class Meta:
         model = Booking
-        fields = ["id", "inventory_id", "member_id", "member", "status", "created_at"]
+        fields = ["id", "inventory", "member_id", "member", "status", "created_at"]
 
     def validate(self, data):
         inventory = self.context["inventory"]
