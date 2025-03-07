@@ -8,7 +8,7 @@ from inventory.serializers import InventorySerializer
 # Create your views here.
 class InventoryListView(ListAPIView):
     """
-        API to provide list of all invetories
+        API to provide list of all inventories
     """
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
