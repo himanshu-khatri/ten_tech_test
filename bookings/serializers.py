@@ -7,11 +7,12 @@ from member.models import Member
 
 class BookingSerializer(serializers.ModelSerializer):
 	member_id = serializers.IntegerField(write_only=True)
+	status = serializers.ChoiceField(choices=BookingStatus.choices, required=False, default=BookingStatus.CREATED)
 
 	class Meta:
 		model = Booking
 		fields = ["id", "inventory", "member_id", "member", "status", "created_at"]
-		read_only_fields = ["id", "inventory", "status", "member"]
+		read_only_fields = ["id", "inventory", "member"]
 
 	def validate(self, data):
 		if self.context["request"].method == "POST":
@@ -42,8 +43,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
 	def update(self, instance, validated_data):
 		status_choice = validated_data.get("status")
-
-		instance.status = BookingStatus.CANCELLED
+		instance.status = status_choice
 		instance.save(update_fields=["status"])
 
 		instance.inventory.remaining_count += 1

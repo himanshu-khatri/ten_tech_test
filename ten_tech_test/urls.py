@@ -19,7 +19,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/", include("bookings.urls")),
-path('schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema
+    path('api/members/', include('member.urls')),
+    path('api/inventory/', include('inventory.urls')),
+    path("api/bookings/v1/", include("bookings.urls")),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
