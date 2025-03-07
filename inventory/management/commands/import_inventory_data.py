@@ -3,6 +3,7 @@ import csv
 from django.core.management import BaseCommand
 
 from inventory.models import Inventory
+from datetime import datetime
 
 
 class Command(BaseCommand):
@@ -18,12 +19,13 @@ class Command(BaseCommand):
         with open(csv_file_name, "r",) as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
+                formatted_date = datetime.strptime(row["expiration_date"], "%d/%m/%Y").strftime("%Y-%m-%d")
                 model_records.append(
                     Inventory(
                         title=row["title"],
                         description=row["description"],
                         remaining_count=row["remaining_count"],
-                        expiration_date = row["expiration_date"]
+                        expiration_date = formatted_date
                     )
                 )
         if model_records:

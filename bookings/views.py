@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,7 +19,7 @@ class CancelBookingView(APIView):
 			booking = Booking.objects.select_related('member', 'inventory').get(id=id)
 		except:
 			return Response({"message": "Booking Not Found!"}, status=status.HTTP_400_BAD_REQUEST)	
-		serializer = BookingSerializer(booking, data={"status": BookingStatus.CANCELLED}, partial=True)
+		serializer = BookingSerializer(booking, data={"status": BookingStatus.CANCELLED}, partial=True, context={"request": request})
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 
@@ -26,9 +27,10 @@ class CancelBookingView(APIView):
 
 class BookInventoryView(APIView):
 
-	def post(self, request, id):
-		inventory = get_object_or_404(Inventory, pk=id)
-		serializer = BookingSerializer(data=request.data, context = {"inventory": inventory})
+	@extend_schema(request=BookingSerializer)
+	def post(self, request, inventory_id):
+		inventory = get_object_or_404(Inventory, pk=inventory_id)
+		serializer = BookingSerializer(data=request.data, context = {"inventory": inventory, "request": request})
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data, status=status.HTTP_200_OK)
